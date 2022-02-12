@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 export SCRIPT_DIR
-[ ${DEBUG} ] && echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+[ "${DEBUG}" ] && echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
 # shellcheck source=./config-common.sh
 . "${SCRIPT_DIR}/config-common.sh"
@@ -40,9 +40,9 @@ createMovie() {
   find "${filePath}" -type f -name '*.jpg' -print0 | sort | while IFS= read -r -d '' file; do
     local counter
     counter=$(printf %06d $x)
-    [ $DEBUG ] && echo "$counter.jpg" ← "${file}" || echo -n "."
+    [ "$DEBUG" ] && echo "$counter.jpg" ← "${file}" || echo -n "."
     cp "${file}" "$counter.jpg"
-    export x=$(($x + 1))
+    export x=$((x + 1))
   done
 
   if [ -f "*.jpg" ]; then

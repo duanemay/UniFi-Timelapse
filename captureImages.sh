@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 export SCRIPT_DIR
-[ ${DEBUG} ] && echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+[ "${DEBUG}" ] && echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
 # shellcheck source=./config-common.sh
 . "${SCRIPT_DIR}/config-common.sh"

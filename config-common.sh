@@ -1,5 +1,6 @@
 #!/bin/false
 # shellcheck shell=bash
+# shellcheck disable=SC2034 ## This file is sourced by multiple scripts
 
 SNAP_BASE="${SCRIPT_DIR}"
 TIMELAPSE_DIR="${SNAP_BASE}/Timelapse"
@@ -17,7 +18,7 @@ declare -A CAMS
 
 VERBOSE=1
 log() {
-  if [[ -n ${VERBOSE} ]]; then echo "$@"; fi
+  if [[ -n "${VERBOSE}" ]]; then echo "$@"; fi
 }
 
 logerr() {
@@ -33,7 +34,7 @@ createDir() {
 cleanupDir() {
   local TEMP_DIR=${1:?directory to cleanup not specified}
   if [ -n "${TEMP_DIR}" ] && [ -d "${TEMP_DIR}" ]; then
-    echo Cleaning up temporary files... ${TEMP_DIR}
+    echo "Cleaning up temporary files... ${TEMP_DIR}"
     rm -rf "${TEMP_DIR}"
   fi
 }
