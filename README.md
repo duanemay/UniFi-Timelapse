@@ -1,53 +1,59 @@
-# Timelapsesnap
-Create Timelapse from Unifi G3 (flex) Camera through snap.jpeg
-derived from: https://github.com/sfeakes/UniFi-Timelapse
+# UniFi-Timelapse
+
+Creates a Timelapse from Unifi G3 (flex) Camera
+(derived from: https://github.com/aroundmyroom/timelapsesnap, 
+which was derived from: https://github.com/sfeakes/UniFi-Timelapse)
+
+2 Snaps a minute will produce: 2880 files a day...
+20 fps = 2:24 long movie a day...
+25 fps = 1:55 long movie a day...
 
 Needs:
-Unifi G3 (Flex) camera with public snap.jpeg option (to be set in the camera) (no username/password)
-FFMPEG
-Some scripting skills (i have little, so it must be do-able)
+- Unifi G3 (Flex) camera with public snap.jpeg option (to be set in the camera) (no username/password)
+- FFMPEG
 
-
+# License
 License should be considered Public Domain as it is derived from above github source ;)
 
-I have renamed the script snap.sh
+# How to use
 
-ie
-/home/snap/snap.sh savesnap "Voordeur"
+## Update config-camera.sh
 
-The above option should save a still image to the directry listed in the SNAP_BASE variable. 
+Simply add the URL to your Unifi cameras, for the snap.jpeg, to  `config-camera.sh`
+
+```bash
+CAMS["Voordeur"]="http://10.1.1.244/snap.jpeg"
+```
+
+## Add schedules
 
 This example in crontab is to save an image every minute
 
-`*/1 * * * * /path/to/script/snap.sh savesnap "Voordeur" "Achterdeur"`
+```crontab
+*/1 * * * * /path/to/script/captureImage.sh
+```
 
-./snap.sh createvideo "defined Camera name" today
-That will create a time-lapse of all todays images. Options are today yesterday all file hopefully that’s self explanatory.
+This can be done to get 2 images per minute. 
+```crontab
+*/1 * * * * /path/to/script/captureImage.sh; sleep 30; /path/to/script/captureImage.sh
+```
 
-It depends what kind of timelapse you want, this script is optimized to get every x seconds an image as this gives better results when
-capturing clouds during 1 or 2 days. 
+## Create the Timelapse movie
 
-This example gets every 30 seconds 1 image
+`/path/to/script/createMovies.sh`
+Will create a timelapse of yesterday's files
+You can pass a param `yesterday`, `today`, `all`, or a specific date e.g. `2022-02-22`
 
-`* * * * * /bin/bash -c ' for i in {1..2}; do /home/snap/snap.sh savesnap "Voordeur" > /dev/null 2>&1 ; sleep 30 ; done '`
+And in a crontab
+```crontab
+5 0 * * * /path/to/script/createMovies.sh
+```
 
-Explained:
+## Add Background music
 
-`* * * * * /bin/bash -c ' for i in {1..X}; do /home/snap/snap.sh savesnap "Voordeur" > /dev/null 2>&1 ; sleep Y ; done '`
+If the file `audio.mp3` is detected, in the directory with the scripts, that file will be used as background music to the timelapse.
 
-If you want to run every N seconds then X will be 60/N and Y will be N.
+## Advanced Configuration
 
-This example gets every 1 minute 1 image
-
-`*/1 * * * * /path/to/script/snap.sh savesnap "Voordeur" "Achterdeur"`
-
-`*/1 7-18 * * * /home/snap/snap.sh savesnap "Voordeur" > /dev/null 2>&1`
-
-In this example: Get every minute an image between 07.00 and 18.00 hours (if you do not want to capture dark periods)
-
-Main command to create a video:
-./snap.sh createvideo "defined Camera name" today|yesterday|all|file
-
-example:
-./snap.sh createvideo "Voordeur" all
-The file option should be a text file with a list of the images you want included, one per line.
+You can adjust other settings like framerate, location of Timelapse files, and 
+date formats in the file: `config-common.sh`
